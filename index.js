@@ -18,6 +18,24 @@ app.get("/", function (req, res) {
   res.sendFile(__dirname + '/views/index.html');
 });
 
+app.get("/api/:date?", function(req, res){
+  let dateInput = req.params.date;
+  let date;
+
+  if (!dateInput){
+    date = new Date();
+  } else if (!isNaN(dateInput) && dateInput.length === 13){
+    date = new Date(Number(dateInput));
+  } else {
+    date = new Date(dateInput);
+  };
+
+  if (!isNaN(date.getTime())){
+    res.json({unix: date.getTime(), utc: date.toUTCString()});
+  } else {
+    res.json({error: "Invalid Date"});
+  };
+});
 
 // your first API endpoint... 
 app.get("/api/hello", function (req, res) {
